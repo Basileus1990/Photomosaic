@@ -1,0 +1,13 @@
+TODO:
+- Make option to download all images from google with given tag
+	* Make it throw a error message when key field is empty
+- Make it resize and calculate avarage color of image. Name it with it's avarage RGB value.
+- next saves it to file named by it's RGB (Make files for all RGBs/10)
+
+- make it take from user an image, then make it's size divisible by 10 and divide it to squeres 10x10
+- calculate each square avarage color and select the closest image from database.
+- create new image from those squares and display it to the user
+
+
+API key: AIzaSyDdOK7BznrYeCP1xA4SIU9HyZ3iAVNd9jo
+Search ID:  89651cfdf629fd6a7 

@@ -3,9 +3,11 @@ import kivy
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 
+from Classes.GoogleImageDownloader import GoogleImageDownloader
+
 
 class MainWindow(BoxLayout):
-    pass
+    google_image_downloader = GoogleImageDownloader()
 
 
 class PhotomosaicApp(App):
