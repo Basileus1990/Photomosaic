@@ -4,6 +4,9 @@ import json
 import cv2
 import numpy
 import os
+import ctypes
+import traceback
+from PIL import UnidentifiedImageError
 
 
 # Downloads as much images from google as it can of a given key. Then it resizes
@@ -20,8 +23,6 @@ class GoogleImageDownloader:
     def __init__(self):
         self.check_if_base_dir_exists()
 
-        self.download_images('red')
-
     # checks if base directory exists, if not then it creates it
     def check_if_base_dir_exists(self):
         if not os.path.exists('./' + self._Base_Directory):
@@ -29,23 +30,54 @@ class GoogleImageDownloader:
 
     # downloads, resizes and saves images in a directory responding to it's average color
     def download_images(self, key):
+        if key == '':
+            ctypes.windll.user32.MessageBoxW(0, 'Keyword can\'t be empty', '', 0)
+            return
+
         keys = self.get_keys()
         gis = GoogleImagesSearch(keys['API key'], keys['Search_ID'])
+        to_download = 10    # How many images it should download
         _search_params = {
             'q': key,
-            'num': 10,
+            'num': to_download,
         }
         gis.search(search_params=_search_params)
 
-        for image in gis.results():
-            image.download(f'{pathlib.Path().absolute()}\Images')
-            image.resize(20, 20)    #  UnidentifiedImageError - pominąć jeżeli wystąpi
-            image_name = self.get_image_name(image.path)
-            average_color = self.calculate_average_color(f'Images\\{image_name}')
-            new_path = self.get_new_image_path(average_color)
+        while to_download > 0:
+            for image in gis.results():
+                image.download(f'{pathlib.Path().absolute()}\Images')
+                to_remove_corrupted_image = False
+                try:
+                    image.resize(20, 20)
+                    image_name = self.get_image_name(image.path)
+                    average_color = self.calculate_average_color(f'Images\\{image_name}')
+                    new_path = self.get_new_image_path(average_color)
 
-            os.rename(f'.\\Images\\{image_name}', f'{new_path}{average_color[0]} {average_color[1]} {average_color[2]}.jpg')
+                    os.rename(f'.\\Images\\{image_name}', f'{new_path}{average_color[0]} {average_color[1]} {average_color[2]}.jpg')
+                    to_download -= 1
+                    if to_download <= 0:
+                        break
 
+                except UnidentifiedImageError:
+                    to_remove_corrupted_image = True
+                except FileExistsError:
+                    os.remove(image.path)
+                except Exception:
+                    traceback.print_exc()
+                    try:
+                        os.remove(image.path)
+                    except Exception:
+                        print('Couldn\'t remove the image')
+                        traceback.print_exc()
+
+                if to_remove_corrupted_image:
+                    try:
+                        os.remove(image.path)
+                    except Exception:
+                        print('Couldn\'t remove the corrupted image')
+                        traceback.print_exc()
+            if to_download > 0:
+                gis.next_page()
 
     # Returns average color of an image taken from the image_path, in RGB string list format
     def calculate_average_color(self, image_path):
@@ -62,18 +94,10 @@ class GoogleImageDownloader:
     # returns new image path, if directories don't exist then it creates them
     def get_new_image_path(self, average_color):
         path = '.\\Images\\'
-        if not os.path.exists(f'{path}{average_color[0]}'):
-            os.mkdir(f'{path}{average_color[0]}')
-        path += f'{average_color[0]}\\'
-
-        if not os.path.exists(f'{path}{average_color[1]}'):
-            os.mkdir(f'{path}{average_color[1]}')
-        path += f'{average_color[1]}\\'
-
-        if not os.path.exists(f'{path}{average_color[2]}'):
-            os.mkdir(f'{path}{average_color[2]}')
-        path += f'{average_color[2]}\\'
-
+        for av_color in average_color:
+            if not os.path.exists(f'{path}{av_color}'):
+                os.mkdir(f'{path}{av_color}')
+            path += f'{av_color}\\'
         return path
 
 
