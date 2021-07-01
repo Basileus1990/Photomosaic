@@ -53,7 +53,10 @@ class GoogleImageDownloader:
 
         while to_download > 0:
             for image in gis.results():
-                image.download(f'{pathlib.Path().absolute()}\Images')
+                try:
+                    image.download(f'{pathlib.Path().absolute()}\Images')
+                except Exception:
+                    continue
                 is_image_corrupted = False
                 try:
                     image.resize(20, 20)
@@ -97,6 +100,7 @@ class GoogleImageDownloader:
                         except:
                             ctypes.windll.user32.MessageBoxW(0, 'Something went wrong. Try again or try a different keyword', '', 0)
                     return
+        ctypes.windll.user32.MessageBoxW(0, 'Finished downloading', '', 0)
 
     # Returns average color of an image taken from the image_path, in RGB string list format
     def calculate_average_color(self, image_path):
