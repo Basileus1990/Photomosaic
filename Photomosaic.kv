@@ -9,7 +9,7 @@
 
         canvas.before:
             Color:
-                rgba: 0, 0.7, 1, 1
+                rgba: 255, 2, 0, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -22,8 +22,8 @@
             bold: 'True'
             outline_color: 40, 0.5, 0
             font_size: 20
-            pos: 15, self.parent.parent.height - self.size[1] - self.parent.height/12.5
-            size: self.texture_size[0] + 10, self.parent.height - 6
+            pos: 0, self.parent.parent.height - self.size[1] - self.parent.height/12.5
+            size: self.parent.size
             size_hint: None, None
             background_color: 255, 2, 0, 1
             # border
@@ -33,82 +33,20 @@
                 Line:
                     width: 2
                     rectangle: self.x, self.y, self.width, self.height
-            on_release: root.mosaic_creator.create_mosaic()
+            on_release: root.start_mosaic_creator_thread()
 
-        # Dowlnload images button
-        Button:
-            id: download_button
-            text: 'Download images'
-            outline_width: 1
-            bold: 'True'
-            outline_color: 40, 0.5, 0
-            font_size: 20
-            pos: 15 + root.ids.insert_button.width + 15, self.parent.parent.height - self.size[1] - self.parent.height/12.5
-            size: self.texture_size[0] + 10, self.parent.height - 6
+
+        ProgressBar:
             size_hint: None, None
-            background_color: 255, 2, 0, 1
-            # border
-            canvas.before:
-                Color:
-                    rgba: 40, 0.6, 0, 1
-                Line:
-                    width: 2
-                    rectangle: self.x, self.y, self.width, self.height
-            on_release: search_box.visible = not search_box.visible
-
-        BoxLayout:
-            id: search_box
-            orientation: 'horizontal'
-            pos: root.ids.download_button.pos[0] + root.ids.download_button.width/2 - self.width/2, self.parent.parent.height - (self.parent.height*2 + 5)
-            size_hint: None, None
-            size: 400, 40
-
-            visible: False
-            opacity: 0 if self.visible == 0 else 1
-            disabled: True if self.visible == 0 else False
-            canvas.before:
-                Color:
-                    rgba: 0, 0.7, 1, 1
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-            # border
-            canvas:
-                Color:
-                    rgba: 40, 0.6, 0, 1
-                Line:
-                    width: 2
-                    rectangle: self.x, self.y, self.width, self.height
-
-            # text input for keyword for google
-            TextInput:
-                id: keyword_input
-                font_size: 20
-                multiline: False
-                hint_text: 'Your search keyword'
-
-            # Download button --> starts downloading images
-            Button:
-                text: 'Download'
-                font_size: 20
-                outline_width: 1
-                bold: 'True'
-                outline_color: 40, 0.5, 0
-                size_hint_x: None
-                width: self.texture_size[0] + 10
-                on_release: root.google_image_downloader.download_images(keyword_input.text)
-
-                background_color: 255, 2, 0, 1
-                # border
-                canvas.before:
-                    Color:
-                        rgba: 40, 0.6, 0, 1
-                    Line:
-                        width: 2
-                        rectangle: self.x, self.y, self.width, self.height
+            size: self.parent.width - 100, 1
+            pos: 50, self.parent.parent.height - (self.parent.height+11)
+            opacity: 0 if root.progress_bar_value == 0 else 1
+            value: root.progress_bar_value
+            max: 100
 
     # Image panel
     BoxLayout:
+        padding: 0, 15, 0, 0
         Image:
             allow_stretch: True
             opacity: 0 if root.displayed_image_path == '' else 1

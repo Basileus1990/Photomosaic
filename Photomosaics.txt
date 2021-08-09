@@ -4,9 +4,18 @@ TODO:
 -$ Make it resize and calculate avarage color of image. Name it with it's avarage RGB value.
 -$ next saves it to file named by it's RGB (Make files for all RGBs/10)
 
-- & make it take from user an image, then make it's size divisible by 10 and divide it to squeres 10x10
-- & calculate each square avarage color and select the closest image from database.
-- create new image from those squares and display it to the user
+- $ make it take from user an image, then make it's size divisible by 10 and divide it to squeres 10x10
+- $ calculate each square avarage color and select the closest image from database.
+- $ create new image from those squares and display it to the user
+
+- $ Make it save images in directory selected by the user
+- $ Make it display a progress bar of creating a mosaic
+- $ Make creating a mosaic into a separate thread to prevent crashing of whole program. (disable buttons in main thread)
+- $ Delete/refactor downloading images feature
+- $ Make it display the original image first and after completing a mosaic, display the mosaic
+- $ Make it make a sound when creating a mosaic is completed
+- $ Disable the console
+- $ make progress bar on top of the image
 
 
 API key: AIzaSyDdOK7BznrYeCP1xA4SIU9HyZ3iAVNd9jo
