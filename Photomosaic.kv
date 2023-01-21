@@ -1,0 +1,53 @@
+<MainWindow>:
+    orientation: 'vertical'
+    background_color: 0, 158, 255, 1
+
+    # Menu Panel with options
+    FloatLayout:
+        size_hint_y: None
+        height: 40
+
+        canvas.before:
+            Color:
+                rgba: 255, 2, 0, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        # Insert base image button
+        Button:
+            id: insert_button
+            text: 'Insert base image'
+            outline_width: 1
+            bold: 'True'
+            outline_color: 40, 0.5, 0
+            font_size: 20
+            pos: 0, self.parent.parent.height - self.size[1] - self.parent.height/12.5
+            size: self.parent.size
+            size_hint: None, None
+            background_color: 255, 2, 0, 1
+            # border
+            canvas.before:
+                Color:
+                    rgba: 40, 0.6, 0, 1
+                Line:
+                    width: 2
+                    rectangle: self.x, self.y, self.width, self.height
+            on_release: root.start_mosaic_creator_thread()
+
+
+        ProgressBar:
+            size_hint: None, None
+            size: self.parent.width - 100, 1
+            pos: 50, self.parent.parent.height - (self.parent.height+11)
+            opacity: 0 if root.progress_bar_value == 0 else 1
+            value: root.progress_bar_value
+            max: 100
+
+    # Image panel
+    BoxLayout:
+        padding: 0, 15, 0, 0
+        Image:
+            allow_stretch: True
+            opacity: 0 if root.displayed_image_path == '' else 1
+            source: root.displayed_image_path
