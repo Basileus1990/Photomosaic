@@ -17,6 +17,3 @@ TODO:
 - $ Disable the console
 - $ make progress bar on top of the image
 
-
-API key: AIzaSyDdOK7BznrYeCP1xA4SIU9HyZ3iAVNd9jo
-Search ID:  89651cfdf629fd6a7
